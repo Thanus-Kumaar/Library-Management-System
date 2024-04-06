@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %} Read {% endblock %}
+{% block body %}
+<object style="width: 100%; height: 100%;" type="application/pdf" data="/view-file?filename={{ filename }}" width="800" height="600"></object>
+{% endblock %}

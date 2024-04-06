@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %} Search Books {% endblock %}
+{% block body %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <div class="navbar-brand">Library Management System</div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" aria-current="page" href="/userHome">Home</a>
+          <a class="nav-link" href="/readBooks">Read</a>
+          <a class="nav-link" href="/userBooks">Request</a>
+          <button type="button" class="btn btn-light">
+            <a href="/logOut" style="text-decoration:none; color:black;">Log out</a></button>
+        </div>
+    </div>
+  </div>
+</nav>
+<div class="p-4">
+  <table class="table table-primary table-hover table-bordered table-responsive align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Book Name</th>
+        <th>Author</th>
+        <th>Section</th>
+        <th>Availability</th>
+        <th>Request</th>
+      </tr>
+    </thead>
+    {% for i in books %}
+      <tr>
+        <td>{{ i[0] }}</td>
+        <td>{{ i[1] }}</td>
+        <td>{{ i[2] }}</td>
+        <td>
+          {% if i[3] > 0 %}
+            Available
+          {% else %}
+            Not Available
+          {% endif %}
+        </td>
+        <td>
+          {% if i[3] > 0 %}
+            <button type="button" onclick="requestMethod('{{i[0]}}')" class="btn btn-light">Request Book</button>
+          {% else %}
+          <button type="button" disabled class="btn btn-light">Request Book</button>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+<script>
+  function requestMethod(bookName){
+    fetch('/requestBooks',{
+      method:"POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        book: bookName 
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      }
+    })
+    .then(data=>{
+      console.log(data)
+      alert(data.msg)
+    })
+    .catch(error=>{
+      alert(error)
+    })
+  }
+</script>
+{% endblock %}

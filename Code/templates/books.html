@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% block title %} Manage Books {% endblock %}
+{% block body %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <div class="navbar-brand">Library Management System</div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" aria-current="page" href="/adminHome">Home</a>
+          <a class="nav-link" href="/manageSections">Sections</a>
+          <a class="nav-link" href="/manageBooks">Books</a>
+          <button type="button" class="btn btn-light">
+            <a href="/logOut" style="text-decoration:none; color:black;">Log out</a></button>
+        </div>
+    </div>
+  </div>
+</nav>
+<div style="text-align: center; font-size: 25px; padding-bottom: 15px; margin-bottom: 10px; background-color: rgb(248, 249, 250);">
+  Manage Books
+</div>
+<div class="d-flex flex-row">
+  <div style="width: 400px; margin-top: 100px;">
+    <div class="d-flex flex-column row-gap-3 mx-auto" style="width: max-content;">
+      <button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#addBookModal">
+        Add Book
+      </button>
+      <button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#editBookModal">
+        Edit Book
+      </button>
+      <button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#deleteBookModal">
+        Delete Book
+      </button>
+    </div>
+  </div>
+  <div style="flex: 1;">
+    {% if books==[] %}
+      <div class="d-flex flex-fill">
+        <h2 class="mx-auto" style="padding: 100px;">You have no books</h2>
+      </div>
+    {% else %}
+      <div class="p-4">
+        <table class="table table-primary table-hover table-bordered table-responsive">
+          <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Book Name</th>
+              <th>Author</th>
+              <th>Section ID</th>
+              <th>No of copies</th>
+            </tr>
+          </thead>
+          {% for i in books %}
+            <tr>
+              <td>{{ i[0] }}</td>
+              <td>{{ i[1] }}</td>
+              <td>{{ i[2] }}</td>
+              <td>{{ i[3] }}</td>
+              <td>{{ i[4] }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!--Popup for adding secction-->
+<div class="modal" tabindex="-1" id="addBookModal" aria-labelledby="addBookModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add new book</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/manageBooks" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="Book" class="form-label">Upload book</label>
+            <input type="file" class="form-control" id=book name="book">
+          </div>
+          <div class="mb-3">
+            <label for="author" class="form-label">Author</label>
+            <input type="text" class="form-control" id=author name="author">
+          </div>
+          <div class="mb-3">
+            <label for="noOfBooks" class="form-label">Number of books</label>
+            <input type="text" class="form-control" id=noOfBooks name="noOfBooks">
+          </div>
+          <div class="mb-3">
+            <label for="secID" class="form-label">section ID</label>
+            <input type="text" class="form-control" id=secID name="secID">
+          </div>
+          <input type="hidden" name="isEdit" class="form-control" id="isEdit" value="0">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary" value="Add Book"></input>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Popup for editing book-->
+<div class="modal" tabindex="-1" id="editBookModal" aria-labelledby="editBookModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit book</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/manageBooks" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="secID" class="form-label">Book ID</label>
+            <input type="text" class="form-control" id=bookID name="bookID">
+          </div>
+          <div class="mb-3">
+            <label for="Book" class="form-label">Upload book</label>
+            <input type="file" class="form-control" id=book2 name="book">
+          </div>
+          <div class="mb-3">
+            <label for="author" class="form-label">Author</label>
+            <input type="text" class="form-control" id=author2 name="author">
+          </div>
+          <div class="mb-3">
+            <label for="noOfBooks" class="form-label">Number of books</label>
+            <input type="text" class="form-control" id=noOfBooks name="noOfBooks">
+          </div>
+          <div class="mb-3">
+            <label for="secID" class="form-label">section ID</label>
+            <input type="text" class="form-control" id=secID2 name="secID">
+          </div>
+          <input type="hidden" class="form-control" name="isEdit" id="isEdit" value="1">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input type="submit" onclick="editSection()" class="btn btn-primary" value="Edit Book"></input>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Popup for deleting section-->
+<div class="modal" tabindex="-1" id="deleteBookModal" aria-labelledby="deleteBookModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete section</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="bookID2" class="form-label">Book ID</label>
+            <input type="text" class="form-control" id=bookID2 name="bookID2">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input type="submit" onclick="deleteSection()" class="btn btn-primary" value="Delete Section"></input>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function deleteSection(){
+    var bookID = document.getElementById("bookID2").value;
+      fetch('/manageBooks?bookID=' + bookID, {
+        method: 'DELETE'
+      }).then(response => {
+        if (response.ok) {
+          return
+        } else {
+          alert('Error deleting book');
+        }
+      });
+  }
+  function editSection(){
+    var bookID = document.getElementById("bookID").value;
+    var bookName = document.getElementById("book2").value;
+    var secDesc = document.getElementById("description2").value;
+    var secID = document.getElementById("secID2").value;
+      fetch('/manageSections', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id:secID,
+          name:secName,
+          desc:secDesc
+        })
+      }).then(response => {
+        if (response.ok) {
+          console.log('Section Edited successfully');
+        } else {
+          console.log('Error editing section');
+        }
+      });
+  }
+</script>
+{% endblock %}

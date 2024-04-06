@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+{% block body %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <div class="navbar-brand">Library Management System</div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" aria-current="page" href="/userHome">Home</a>
+          <a class="nav-link" href="/readBooks">Read</a>
+          <a class="nav-link" href="/userBooks">Request</a>
+          <button type="button" class="btn btn-light">
+            <a href="/logOut" style="text-decoration:none; color:black;">Log out</a></button>
+        </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex flex-row p-4" style="margin-top: 10%;">
+  <div class="d-flex flex-grow-1">
+    <div class="mx-auto">
+      <span class="display-2">Welcome {{ name }}</spam>
+      <span class="display-6 d-block">Library Management System</span>
+    </div>
+  </div>
+  <div class="d-flex flex-fill ">
+    <div class="d-flex flex-column mx-auto row-gap-3">
+      <button class="btn btn-light" type="button" onclick="window.location.href='/readBooks'">
+        Read Books
+      </button>
+      <button class="btn btn-light" type="button" onclick="window.location.href='/userBooks'">
+        Request / Return books
+      </button>
+      <button class="btn btn-light" type="button" onclick="window.location.href='/searchBooks'">
+        Search Books
+      </button>
+    </div>
+  </div>
+</div>
+<div class="modal" tabindex="-1" id="UsersModal" aria-labelledby="UsersModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Users</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-primary table-hover table-bordered table-responsive">
+          <thead class="table-dark">
+            <tr>
+              <th>User Name</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          {% for i in userData %}
+            <tr>
+              <td>{{ i[0] }}</td>
+              <td>{{ i[1] }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

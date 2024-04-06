@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %} Manage {% endblock %}
+{% block body %} 
+<div>
+  <div class="p-4">
+    <table class="table table-primary table-hover table-bordered table-responsive align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Book ID</th>
+          <th>User Name</th>
+          <th>Book Name</th>
+          <th>Author</th>
+          <th>Availability</th>
+          <th>Issue Date</th>
+          <th>Return Date</th>
+          <th>Issue</th>
+          <th>Revoke</th>
+        </tr>
+      </thead>
+      {% for i in books %}
+        <tr>
+          <td>{{ i[0] }}</td>
+          <td>{{ i[1] }}</td>
+          <td>{{ i[2] }}</td>
+          <td>{{ i[3] }}</td>
+          <td>{{ i[4] }}</td>
+          <td>{{ i[5] }}</td>
+          <td>{{ i[6] }}</td>
+          <td>
+            {% if i[7] == 0 and i[4] != 0 %}
+              <button type="button" onclick="issueMethod('{{i[0]}}','{{i[1]}}')" class="btn btn-light">Issue Book</button>
+            {% else %}
+            <button type="button" disabled class="btn btn-light">Issue Book</button>
+            {% endif %}
+          </td>
+          <td>
+            {% if i[7] == 1 %}
+              <button type="button" onclick="revokeMethod('{{i[0]}}','{{i[1]}}')" class="btn btn-light">Revoke Book</button>
+            {% else %}
+            <button type="button" disabled class="btn btn-light">Revoke Book</button>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+<script>
+  function issueMethod(bookid, uname){
+    fetch('/issueBook',{
+      method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          bookid:bookid,
+          user:uname
+        })
+    })
+    .then(response=>{
+      if(response.status = 200){
+        console.log("Successfully Issued")
+      }
+    });
+  }
+  function revokeMethod(bookid, uname){
+    fetch('/revokeBook',{
+      method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          bookid:bookid,
+          user:uname
+        })
+    })
+    .then(response=>{
+      if(response.status = 200){
+        console.log("Successfully Revoked")
+      }
+    });
+  }
+</script>
+{% endblock %}

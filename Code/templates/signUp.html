@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %} Sign Up {% endblock %}
+{% block cssfile %} <link rel="stylesheet" href="../static/css/signUp.css"> {% endblock %}
+{% block body %} 
+<div class="signUp-form mx-auto">
+  <h2>
+    Sign Up Form
+  </h2>
+  <form action="/addUser" id="userForm" method="post">
+    <div class="mb-3">
+      <label for="userName" class="form-label">Username</label>
+      <input type="text" class="form-control" id=userName name="userName">
+    </div>
+    <div class="mb-3">
+      <label for="passwordInput" class="form-label">Password</label>
+      <input type="password" class="form-control" id="passwordInput" name="password">
+      <div id="passwordHelpBlock" class="form-text">
+        Your password must be min 8 characters long, contain letters and numbers, and must not contain spaces or special characters.
+      </div>
+    </div>
+    <div class="mb-3">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="1" id="isAdmin" name="isAdmin">
+        <label class="form-check-label" for="isAdmin">
+          Are you an Admin?
+        </label>
+      </div>
+    </div>
+    <p><a href="/login" class="link-primary fs-8 fw-normal">already have an account?</a></p>
+    <button type="submit" disabled="True" class="btn btn-primary" id="subButton">Submit</button>
+  </form>
+</div>
+<div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true" id="liveToast">
+  <div class="d-flex">
+    <div class="toast-body" id="liveToastBody">
+      
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" id="liveToastClose"></button>
+  </div>
+</div>
+<script>
+  let pass = document.getElementById("passwordInput")
+  function validatePass(){
+    return /^[a-zA-Z0-9]{8,}/.test(pass.value)
+  }
+  function toggleSubmit(){
+    console.log(pass.value)
+    subButton = document.getElementById("subButton")
+    subButton.disabled = !validatePass()
+  }
+  pass.addEventListener("input",toggleSubmit)
+  console.log(pass.value)
+
+  document.getElementById("userForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the form from submitting normally
+    
+    // Get form data
+    let formData = new FormData(this);
+    
+    // Make POST request to server
+    fetch('/addUser', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json()) // Parse response as JSON
+    .then(data => {
+        const toastLiveExample = document.getElementById('liveToast')
+        const toastLiveBody = document.getElementById('liveToastBody')
+        if (data.SUCCESS) {
+          toastLiveBody.innerText = data.SUCCESS
+          const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+          toastBootstrap.show()
+          document.getElementById("liveToastClose").addEventListener("click", function(){
+            window.location.href = '/login'
+          })
+        } else if (data.ERROR) {
+          toastLiveBody.innerText = data.ERROR
+          const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+          toastBootstrap.show()
+        } else if(data.BAD_REQUEST) {
+          toastLiveBody.innerText = data.BAD_REQUEST
+          const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+          toastBootstrap.show()
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+</script>
+{% endblock %}
